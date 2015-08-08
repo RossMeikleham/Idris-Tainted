@@ -1,0 +1,6 @@
+package tainted
+
+sourcedir = src
+--modules = Main, Minesweeper.Board, Minesweeper.Game, Minesweeper.REPL, Minesweeper.Helper
+
+
