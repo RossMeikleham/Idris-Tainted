@@ -1,6 +1,7 @@
 package tainted
 
+opts = "-p contrib"
 sourcedir = src
---modules = Main, Minesweeper.Board, Minesweeper.Game, Minesweeper.REPL, Minesweeper.Helper
+modules = Data.Tainted
 
 

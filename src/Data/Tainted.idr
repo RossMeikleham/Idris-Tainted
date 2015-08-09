@@ -1,4 +1,3 @@
-
 module Data.Tainted
 
 import Classes.Verified
