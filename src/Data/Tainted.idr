@@ -100,3 +100,42 @@ instance VerifiedMonad Tainted where
 -- LHS = RHS
   monadAssociativity (Dirty x) f g = believe_me (Refl {x}) --TODO this one is pretty difficult
 
+
+--- Tainted Functions ---
+
+-- | Returns 'True' iff its argument is of the form 'Clean _.
+isClean : Tainted a -> Bool
+isClean (Clean _) = True
+isClean _ = False
+
+
+-- | Returns 'True' iff its argument is of the form Dirty _.  
+isDirty : Tainted a -> Bool 
+isDirty = not . isClean 
+
+
+-- | Extract the value contained in a 'Tainted' type
+extractTaint : Tainted a -> a
+extractTaint (Clean a) = a
+extractTaint (Dirty a) = a
+
+
+-- | Extracts from a list of 'Tainted' all the 'Clean' elements. 
+--   All the 'Clean' elements are extracted in order.
+cleans : List (Tainted a) -> List a
+cleans = map extractTaint . filter isClean 
+
+
+-- | Extracts from a list of 'Tainted' all the 'Dirty' elements.
+--   All the 'Dirty' elements are extracted in order.
+dirtys : List (Tainted a) -> List a
+dirtys = map extractTaint . filter isDirty
+
+
+-- | Partitions a list of 'Tainted' into two lists. 
+--   All the 'Dirty' elements are extracted, in order, to the first component of the output. 
+--   Similarly the 'Clean' elements are extracted to the second component of the output.
+partitionTaints : List (Tainted a) -> (List a, List a)
+partitionTaints ts = (c, d)
+    where c = cleans  ts
+          d = dirtys  ts
