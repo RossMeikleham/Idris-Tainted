@@ -6,6 +6,7 @@ first defining a Functor instance, then defining the Applicative instance on top
 that, and finally the Monadic instance. A Semigroup instance is also included.
 
 SemiGroup
+
 Functor -> Applicative -> Monad
 
 In addition to defining these instances Idris allows for implementing proofs to verify
@@ -18,7 +19,7 @@ Proofs are implemented for the following structures:
 - Monad (except for the monadAssociativity proof for Dirty values; i'm currently
   unable to find a way to implement the proof in Idris, instead this case uses the unsafe
   `believe_me` function to skip the proof, and instead the proof is given in the comments until
-   I can find a way to implement it._
+   I can find a way to implement it.
 
 TODO:
 - Finish last VerifiedMonad proof.
