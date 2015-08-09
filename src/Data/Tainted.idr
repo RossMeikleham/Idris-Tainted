@@ -5,6 +5,11 @@ import Classes.Verified
 data Tainted a = Clean a | Dirty a
 
 
+instance (Show a) => Show (Tainted a) where
+  show (Clean a) = "Clean " ++ (show a)
+  show (Dirty a) = "Dirty " ++ (show a)
+
+
 --- Semigroup Definitions
 instance Semigroup a => Semigroup (Tainted a) where
   (Clean a) <+> (Clean b) = Clean (a <+> b)
