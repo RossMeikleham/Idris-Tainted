@@ -2,12 +2,20 @@
 module Data.Tainted
 
 import Classes.Verified
-import Idris.Core.Evaluate
 
 data Tainted a = Clean a | Dirty a
 
---- Functor Definitions ---
 
+--- Semigroup Definitions
+instance Semigroup a => Semigroup (Tainted a) where
+  (Clean a) <+> (Clean b) = Clean (a <+> b)
+  (Dirty a) <+> (Dirty b) = Dirty (a <+> b)
+  (Clean a) <+> (Dirty b) = Dirty (a <+> b)
+  (Dirty a) <+> (Clean b) = Dirty (a <+> b) 
+
+
+
+--- Functor Definitions ---
 instance Functor Tainted where
   map f (Dirty a) = Dirty (f a)
   map f (Clean a) = Clean (f a)
@@ -60,7 +68,7 @@ instance VerifiedApplicative Tainted where
 instance Monad Tainted where
   (Dirty x) >>= f = case f x of
                   (Clean y) => Dirty y
-                  y => y
+                  (Dirty y) => Dirty y
   (Clean x) >>= f = f x
 
 
@@ -77,5 +85,19 @@ instance VerifiedMonad Tainted where
   monadRightIdentity (Clean _) = Refl
 
   monadAssociativity (Clean _) f g = Refl 
-  monadAssociativity (Dirty x) f g = BelieveMe --TODO this one is pretty difficult
+
+
+-- monadAssociativity proof for (Dirty x)
+--
+-- LHS: (Dirty a >>= f) >>= g = 
+--      g =<< case f a of 
+--          (Clean y) -> Dirty y
+--          y         -> y
+--
+-- RHS: Dirty a >>= (\x -> f x >>= g) = 
+--      g =<< case f a of
+--          (Clean y) -> Dirty y
+--          y         -> y    
+-- LHS = RHS
+  monadAssociativity (Dirty x) f g = believe_me (Refl {x}) --TODO this one is pretty difficult
 
