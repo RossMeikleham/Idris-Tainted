@@ -76,6 +76,7 @@ instance Monad Tainted where
   (Clean x) >>= f = f x
 
 
+
 -- | Verify that Tainted satisfies the Monad laws
 instance VerifiedMonad Tainted where
   monadApplicative (Dirty _) (Dirty _) = Refl
@@ -89,21 +90,14 @@ instance VerifiedMonad Tainted where
   monadRightIdentity (Clean _) = Refl
 
   monadAssociativity (Clean _) f g = Refl 
-
-
--- monadAssociativity proof for (Dirty x)
---
--- LHS: (Dirty a >>= f) >>= g = 
---      g =<< case f a of 
---          (Clean y) -> Dirty y
---          y         -> y
---
--- RHS: Dirty a >>= (\x -> f x >>= g) = 
---      g =<< case f a of
---          (Clean y) -> Dirty y
---          y         -> y    
--- LHS = RHS
-  monadAssociativity (Dirty x) f g = believe_me (Refl {x}) --TODO this one is pretty difficult
+  
+  monadAssociativity (Dirty x) f g with (f x) 
+    monadAssociativity (Dirty x) f g | Clean y with (g y) 
+      monadAssociativity (Dirty x) f g | Clean y | Clean z = Refl 
+      monadAssociativity (Dirty x) f g | Clean y | Dirty z = Refl 
+    monadAssociativity (Dirty x) f g | Dirty y with (g y) 
+      monadAssociativity (Dirty x) f g | Dirty y | Clean z = Refl 
+      monadAssociativity (Dirty x) f g | Dirty y | Dirty z = Refl 
 
 
 --- Tainted Functions ---
