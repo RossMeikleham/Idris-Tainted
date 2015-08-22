@@ -83,6 +83,95 @@ instance VerifiedMeetSemilattice a => VerifiedMeetSemilattice (Tainted a) where
   meetSemilatticeMeetIsIdempotent (Dirty x) = rewrite (meetSemilatticeMeetIsIdempotent x) in Refl	 
   
 
+-- BoundedMeetSemilattice Definitions
+instance BoundedMeetSemilattice a => BoundedMeetSemilattice (Tainted a) where
+  top = (Clean top)
+ 
+ 
+-- Verify that Tainted satisfied the BoundedMeetSemilattice laws
+instance VerifiedBoundedMeetSemilattice a => VerifiedBoundedMeetSemilattice (Tainted a) where
+  boundedMeetSemilatticeTopIsTop (Clean x) = rewrite (boundedMeetSemilatticeTopIsTop x) in Refl
+  boundedMeetSemilatticeTopIsTop (Dirty x) = rewrite (boundedMeetSemilatticeTopIsTop x) in Refl
+
+
+-- JoinSemilattice Definitions
+instance JoinSemilattice a => JoinSemilattice (Tainted a) where
+  join (Clean x) (Clean y) = Clean (join x y)
+  join (Clean x) (Dirty y) = Clean (join x y)
+  join (Dirty x) (Clean y) = Clean (join x y)
+  join (Dirty x) (Dirty y) = Dirty (join x y)
+
+
+-- Verify that Tainted satisfies the JoinSemilattice laws
+instance VerifiedJoinSemilattice a => VerifiedJoinSemilattice (Tainted a) where
+  joinSemilatticeJoinIsAssociative (Clean x) (Clean y) (Clean z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+  joinSemilatticeJoinIsAssociative (Clean x) (Clean y) (Dirty z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+  joinSemilatticeJoinIsAssociative (Clean x) (Dirty y) (Clean z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+  joinSemilatticeJoinIsAssociative (Clean x) (Dirty y) (Dirty z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+  joinSemilatticeJoinIsAssociative (Dirty x) (Clean y) (Clean z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+  joinSemilatticeJoinIsAssociative (Dirty x) (Clean y) (Dirty z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+  joinSemilatticeJoinIsAssociative (Dirty x) (Dirty y) (Clean z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+  joinSemilatticeJoinIsAssociative (Dirty x) (Dirty y) (Dirty z) = 
+    rewrite (joinSemilatticeJoinIsAssociative x y z) in Refl
+
+  joinSemilatticeJoinIsCommutative (Clean x) (Clean y) = 
+    rewrite (joinSemilatticeJoinIsCommutative x y) in Refl
+  joinSemilatticeJoinIsCommutative (Clean x) (Dirty y) = 
+    rewrite (joinSemilatticeJoinIsCommutative x y) in Refl
+  joinSemilatticeJoinIsCommutative (Dirty x) (Clean y) = 
+    rewrite (joinSemilatticeJoinIsCommutative x y) in Refl
+  joinSemilatticeJoinIsCommutative (Dirty x) (Dirty y) = 
+    rewrite (joinSemilatticeJoinIsCommutative x y) in Refl
+
+  joinSemilatticeJoinIsIdempotent (Clean x) = rewrite (joinSemilatticeJoinIsIdempotent x) in Refl	 
+  joinSemilatticeJoinIsIdempotent (Dirty x) = rewrite (joinSemilatticeJoinIsIdempotent x) in Refl	 
+  
+
+-- BoundedJoinSemilattice Definitions
+instance BoundedJoinSemilattice a => BoundedJoinSemilattice (Tainted a) where
+  bottom = (Dirty bottom)
+
+
+-- Verify that Tainted satisfies the BoundedJoinSemilattice laws
+instance VerifiedBoundedJoinSemilattice a => VerifiedBoundedJoinSemilattice (Tainted a) where
+  boundedJoinSemilatticeBottomIsBottom (Clean x) = 
+    rewrite (boundedJoinSemilatticeBottomIsBottom x) in Refl
+  boundedJoinSemilatticeBottomIsBottom (Dirty x) = 
+    rewrite (boundedJoinSemilatticeBottomIsBottom x) in Refl
+  
+
+-- Lattice Definitions, no extra operations over BoundedJoinSemilattice + BoundedMeetSemilattice
+instance Lattice a => Lattice (Tainted a)
+
+
+-- Verify that Tainted satisfies the Lattice laws, need to show Join and Meet absorb one
+-- another
+instance VerifiedLattice a => VerifiedLattice (Tainted a) where
+  latticeMeetAbsorbsJoin (Clean x) (Clean y) = rewrite (latticeMeetAbsorbsJoin x y) in Refl
+  latticeMeetAbsorbsJoin (Clean x) (Dirty y) = rewrite (latticeMeetAbsorbsJoin x y) in Refl
+  latticeMeetAbsorbsJoin (Dirty x) (Clean y) = rewrite (latticeMeetAbsorbsJoin x y) in Refl
+  latticeMeetAbsorbsJoin (Dirty x) (Dirty y) = rewrite (latticeMeetAbsorbsJoin x y) in Refl
+  
+  latticeJoinAbsorbsMeet (Clean x) (Clean y) = rewrite (latticeJoinAbsorbsMeet x y) in Refl
+  latticeJoinAbsorbsMeet (Clean x) (Dirty y) = rewrite (latticeJoinAbsorbsMeet x y) in Refl
+  latticeJoinAbsorbsMeet (Dirty x) (Clean y) = rewrite (latticeJoinAbsorbsMeet x y) in Refl
+  latticeJoinAbsorbsMeet (Dirty x) (Dirty y) = rewrite (latticeJoinAbsorbsMeet x y) in Refl
+   
+  
+-- Since Tainted has been verified to be an instance of BoundedJoinSemilattice + 
+-- BoundedMeetSemilattice + Lattice it follows that Tainted is also an instance of BoundedLattice
+instance BoundedLattice a => BoundedLattice (Tainted a)
+instance VerifiedBoundedLattice a => VerifiedBoundedLattice (Tainted a)
+
+
+
 --- Functor Definitions ---
 instance Functor Tainted where
   map f (Dirty a) = Dirty (f a)
