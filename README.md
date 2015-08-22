@@ -3,11 +3,19 @@ Implementation of the Tainted Monad in Idris. See [here](https://github.com/Ross
 
 Simple re-implementation of a Haskell Monad in Idris. The Monad is built by
 first defining a Functor instance, then defining the Applicative instance on top of
-that, and finally the Monadic instance. A Semigroup instance is also included.
+that, and finally the Monadic instance. Monoid and BoundedLattice instances are
+defined and verified as well.
 
-SemiGroup
+```
+SemiGroup -> Monoid
+
+MeetSemiLattice -> BoundedMeetSemiLattice 
+                                           \
+                                             -> Lattice -> BoundedLattice
+JoinSemiLattice -> BoundedJoinSemiLattice  /
 
 Functor -> Applicative -> Monad
+```
 
 In addition to defining these instances Idris allows for implementing proofs to verify
 the properties of these structures. The Verified instances of each of
@@ -15,6 +23,11 @@ these structures are implemented to achieve this.
 
 Proofs are implemented for the following structures:
 - SemiGroup
+- Monoid
+- MeetSemilattice + BoundedMeetSemiLattice
+- JoinSemilattice + BoundedJoinSemiLattice
+- Lattice
+- BoundedLattice
 - Functor
 - Applicative
 - Monad 
