@@ -18,6 +18,26 @@ instance Semigroup a => Semigroup (Tainted a) where
   (Dirty a) <+> (Clean b) = Dirty (a <+> b) 
 
 
+--- Verify that Tainted satisfies the Semigroup laws
+instance VerifiedSemigroup a => VerifiedSemigroup (Tainted a) where
+ semigroupOpIsAssociative (Clean x) (Clean y) (Clean z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ semigroupOpIsAssociative (Clean x) (Clean y) (Dirty z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ semigroupOpIsAssociative (Clean x) (Dirty y) (Clean z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ semigroupOpIsAssociative (Clean x) (Dirty y) (Dirty z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ semigroupOpIsAssociative (Dirty x) (Clean y) (Clean z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ semigroupOpIsAssociative (Dirty x) (Clean y) (Dirty z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ semigroupOpIsAssociative (Dirty x) (Dirty y) (Clean z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ semigroupOpIsAssociative (Dirty x) (Dirty y) (Dirty z) = rewrite (semigroupOpIsAssociative x y z) in Refl
+ 
+ {-
+  monadAssociativity (Dirty x) f g with (f x) 
+    monadAssociativity (Dirty x) f g | Clean y with (g y) 
+      monadAssociativity (Dirty x) f g | Clean y | Clean z = Refl 
+      monadAssociativity (Dirty x) f g | Clean y | Dirty z = Refl 
+    monadAssociativity (Dirty x) f g | Dirty y with (g y) 
+      monadAssociativity (Dirty x) f g | Dirty y | Clean z = Refl 
+      monadAssociativity (Dirty x) f g | Dirty y | Dirty z = Refl 
+-}
 
 --- Functor Definitions ---
 instance Functor Tainted where

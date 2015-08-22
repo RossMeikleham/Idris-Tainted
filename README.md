@@ -14,17 +14,12 @@ the properties of these structures. The Verified instances of each of
 these structures are implemented to achieve this.
 
 Proofs are implemented for the following structures:
+- SemiGroup
 - Functor
 - Applicative
-- Monad (except for the monadAssociativity proof for Dirty values; i'm currently
-  unable to find a way to implement the proof in Idris, instead this case uses the unsafe
-  `believe_me` function to skip the proof, and instead the proof is given in the comments until
-   I can find a way to implement it.
+- Monad 
 
 TODO:
-- Finish last VerifiedMonad proof.
-- Implement the VerifiedSemigroup instance once I can find a way to prove all 8 cases
-  for the `semigroupOpIsAssociativeproof`.
 - Implement Monad Transformer version.
 
 Example Code (source can be found in the example folder):
