@@ -29,15 +29,19 @@ instance VerifiedSemigroup a => VerifiedSemigroup (Tainted a) where
  semigroupOpIsAssociative (Dirty x) (Dirty y) (Clean z) = rewrite (semigroupOpIsAssociative x y z) in Refl
  semigroupOpIsAssociative (Dirty x) (Dirty y) (Dirty z) = rewrite (semigroupOpIsAssociative x y z) in Refl
  
- {-
-  monadAssociativity (Dirty x) f g with (f x) 
-    monadAssociativity (Dirty x) f g | Clean y with (g y) 
-      monadAssociativity (Dirty x) f g | Clean y | Clean z = Refl 
-      monadAssociativity (Dirty x) f g | Clean y | Dirty z = Refl 
-    monadAssociativity (Dirty x) f g | Dirty y with (g y) 
-      monadAssociativity (Dirty x) f g | Dirty y | Clean z = Refl 
-      monadAssociativity (Dirty x) f g | Dirty y | Dirty z = Refl 
--}
+
+-- Monoid Definitions
+instance Monoid a => Monoid (Tainted a) where
+  neutral = Clean neutral 
+
+-- Verify that Tainted satisfied the Monoid laws
+instance VerifiedMonoid a => VerifiedMonoid (Tainted a) where
+  monoidNeutralIsNeutralL (Clean x) = rewrite (monoidNeutralIsNeutralL x) in Refl
+  monoidNeutralIsNeutralL (Dirty x) = rewrite (monoidNeutralIsNeutralL x) in Refl
+  monoidNeutralIsNeutralR (Clean x) = rewrite (monoidNeutralIsNeutralR x) in Refl
+  monoidNeutralIsNeutralR (Dirty x) = rewrite (monoidNeutralIsNeutralR x) in Refl
+
+
 
 --- Functor Definitions ---
 instance Functor Tainted where
