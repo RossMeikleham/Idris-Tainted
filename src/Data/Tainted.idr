@@ -1,6 +1,8 @@
 module Data.Tainted
 
+import Control.Algebra.Lattice
 import Classes.Verified
+
 
 data Tainted a = Clean a | Dirty a
 
@@ -42,6 +44,44 @@ instance VerifiedMonoid a => VerifiedMonoid (Tainted a) where
   monoidNeutralIsNeutralR (Dirty x) = rewrite (monoidNeutralIsNeutralR x) in Refl
 
 
+--Meet-Semilattice Definitions
+instance MeetSemilattice a => MeetSemilattice (Tainted a) where
+  meet (Clean x) (Clean y) = Clean (meet x y)
+  meet (Dirty x) (Dirty y) = Dirty (meet x y)
+  meet (Clean x) (Dirty y) = Dirty (meet x y)
+  meet (Dirty x) (Clean y) = Dirty (meet x y)
+
+
+instance VerifiedMeetSemilattice a => VerifiedMeetSemilattice (Tainted a) where
+  meetSemilatticeMeetIsAssociative (Clean x) (Clean y) (Clean z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+  meetSemilatticeMeetIsAssociative (Clean x) (Clean y) (Dirty z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+  meetSemilatticeMeetIsAssociative (Clean x) (Dirty y) (Clean z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+  meetSemilatticeMeetIsAssociative (Clean x) (Dirty y) (Dirty z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+  meetSemilatticeMeetIsAssociative (Dirty x) (Clean y) (Clean z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+  meetSemilatticeMeetIsAssociative (Dirty x) (Clean y) (Dirty z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+  meetSemilatticeMeetIsAssociative (Dirty x) (Dirty y) (Clean z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+  meetSemilatticeMeetIsAssociative (Dirty x) (Dirty y) (Dirty z) = 
+    rewrite (meetSemilatticeMeetIsAssociative x y z) in Refl
+
+  meetSemilatticeMeetIsCommutative (Clean x) (Clean y) = 
+    rewrite (meetSemilatticeMeetIsCommutative x y) in Refl
+  meetSemilatticeMeetIsCommutative (Clean x) (Dirty y) = 
+    rewrite (meetSemilatticeMeetIsCommutative x y) in Refl
+  meetSemilatticeMeetIsCommutative (Dirty x) (Clean y) = 
+    rewrite (meetSemilatticeMeetIsCommutative x y) in Refl
+  meetSemilatticeMeetIsCommutative (Dirty x) (Dirty y) = 
+    rewrite (meetSemilatticeMeetIsCommutative x y) in Refl
+
+  meetSemilatticeMeetIsIdempotent (Clean x) = rewrite (meetSemilatticeMeetIsIdempotent x) in Refl	 
+  meetSemilatticeMeetIsIdempotent (Dirty x) = rewrite (meetSemilatticeMeetIsIdempotent x) in Refl	 
+  
 
 --- Functor Definitions ---
 instance Functor Tainted where
@@ -76,7 +116,7 @@ instance VerifiedApplicative Tainted where
    applicativeIdentity (Clean _) = Refl
    applicativeIdentity (Dirty _) = Refl
    
-   applicativeComposition (Clean x) (Clean g1) (Clean g2) = Refl
+   applicativeComposition (Clean x) (Clean g1) (Clean g2) = Refl 
    applicativeComposition (Clean x) (Clean g1) (Dirty g2) = Refl
    applicativeComposition (Clean x) (Dirty g1) (Dirty g2) = Refl
    applicativeComposition (Clean x) (Dirty g1) (Clean g2) = Refl
