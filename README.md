@@ -1,4 +1,10 @@
 # Idris-Tainted
+
+| OSX + Linux | Win x86 + x64 |
+|-------------|---------------|
+|[![Build Status](https://travis-ci.org/RossMeikleham/Idris-Tainted.svg?branch=master)](https://travis-ci.org/RossMeikleham/Idris-CI-Skeleton)|[![Build status](https://ci.appveyor.com/api/projects/status/9m3i7356s75pn72n/branch/master?svg=true)](https://ci.appveyor.com/project/RossMeikleham/idris-tainted)|
+
+
 Implementation of the Tainted Monad in Idris. See [here](https://github.com/RossMeikleham/Tainted) for the original Haskell implementation.
 
 Simple re-implementation of a Haskell Monad in Idris. The Monad is built by
