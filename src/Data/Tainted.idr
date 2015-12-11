@@ -1,8 +1,9 @@
 module Data.Tainted
 
-import Control.Algebra.Lattice
 import Classes.Verified
+import Control.Algebra.Lattice
 
+%default total
 
 data Tainted a = Clean a | Dirty a
 
@@ -87,11 +88,11 @@ instance VerifiedMeetSemilattice a => VerifiedMeetSemilattice (Tainted a) where
 instance BoundedMeetSemilattice a => BoundedMeetSemilattice (Tainted a) where
   top = (Clean top)
  
- 
--- Verify that Tainted satisfied the BoundedMeetSemilattice laws
-instance VerifiedBoundedMeetSemilattice a => VerifiedBoundedMeetSemilattice (Tainted a) where
-  boundedMeetSemilatticeTopIsTop (Clean x) = rewrite (boundedMeetSemilatticeTopIsTop x) in Refl
-  boundedMeetSemilatticeTopIsTop (Dirty x) = rewrite (boundedMeetSemilatticeTopIsTop x) in Refl
+
+
+--instance (VerifiedBoundedMeetSemilattice a) => VerifiedBoundedMeetSemilattice (Tainted a) where
+--  boundedMeetSemilatticeTopIsTop (Clean x) = rewrite believe_me in Refl --(boundedMeetSemilatticeTopIsTop x) in Refl 
+--  boundedMeetSemilatticeTopIsTop (Dirty x) = rewrite believe_me in Refl(boundedMeetSemilatticeTopIsTop x) in Refl
 
 
 -- JoinSemilattice Definitions
@@ -135,24 +136,25 @@ instance VerifiedJoinSemilattice a => VerifiedJoinSemilattice (Tainted a) where
   
 
 -- BoundedJoinSemilattice Definitions
-instance BoundedJoinSemilattice a => BoundedJoinSemilattice (Tainted a) where
-  bottom = (Dirty bottom)
+--instance BoundedJoinSemilattice a => BoundedJoinSemilattice (Tainted a) where
+--  bottom = (Dirty bottom)
 
 
 -- Verify that Tainted satisfies the BoundedJoinSemilattice laws
-instance VerifiedBoundedJoinSemilattice a => VerifiedBoundedJoinSemilattice (Tainted a) where
-  boundedJoinSemilatticeBottomIsBottom (Clean x) = 
-    rewrite (boundedJoinSemilatticeBottomIsBottom x) in Refl
-  boundedJoinSemilatticeBottomIsBottom (Dirty x) = 
-    rewrite (boundedJoinSemilatticeBottomIsBottom x) in Refl
+--instance VerifiedBoundedJoinSemilattice a => VerifiedBoundedJoinSemilattice (Tainted a) where
+--  boundedJoinSemilatticeBottomIsBottom (Clean x) = 
+--    rewrite (boundedJoinSemilatticeBottomIsBottom x) in Refl
+--  boundedJoinSemilatticeBottomIsBottom (Dirty x) = 
+--    rewrite (boundedJoinSemilatticeBottomIsBottom x) in Refl
   
 
 -- Lattice Definitions, no extra operations over BoundedJoinSemilattice + BoundedMeetSemilattice
-instance Lattice a => Lattice (Tainted a)
+--instance Lattice a => Lattice (Tainted a)
 
 
 -- Verify that Tainted satisfies the Lattice laws, need to show Join and Meet absorb one
 -- another
+{-
 instance VerifiedLattice a => VerifiedLattice (Tainted a) where
   latticeMeetAbsorbsJoin (Clean x) (Clean y) = rewrite (latticeMeetAbsorbsJoin x y) in Refl
   latticeMeetAbsorbsJoin (Clean x) (Dirty y) = rewrite (latticeMeetAbsorbsJoin x y) in Refl
@@ -168,8 +170,8 @@ instance VerifiedLattice a => VerifiedLattice (Tainted a) where
 -- Since Tainted has been verified to be an instance of BoundedJoinSemilattice + 
 -- BoundedMeetSemilattice + Lattice it follows that Tainted is also an instance of BoundedLattice
 instance BoundedLattice a => BoundedLattice (Tainted a)
-instance VerifiedBoundedLattice a => VerifiedBoundedLattice (Tainted a)
-
+--instance VerifiedBoundedLattice a => VerifiedBoundedLattice (Tainted a)
+-}
 
 
 --- Functor Definitions ---
